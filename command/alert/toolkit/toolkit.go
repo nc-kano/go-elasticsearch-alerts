@@ -53,6 +53,7 @@ type AlertMethodConfig struct {
 	Team string        `mapstructure:"team"`
 	CaseType string    `mapstructure:"caseType"`
 	Priority string    `mapstructure:"priority"`
+	Message string    `mapstructure:"message"`
 }
 
 // AlertMethod implements the alert.Method interface
@@ -68,6 +69,7 @@ type AlertMethod struct {
 	team string
 	caseType string
 	priority string
+	message string
 }
 
 // NewAlertMethod creates a new *AlertMethod or a
@@ -105,6 +107,7 @@ func NewAlertMethod(config *AlertMethodConfig) (alert.Method, error) {
 		team: config.Team,
 		caseType: config.CaseType,
 		priority: config.Priority,
+		message: config.Message,
 	}, nil
 }
 
@@ -153,6 +156,7 @@ func (e *AlertMethod) buildMessage(rule string, records []*alert.Record) (string
 		Team        string
 		Priority    string
 		CaseType    string
+		Message     string
 	}{
 		rule,
 		records,
@@ -161,6 +165,7 @@ func (e *AlertMethod) buildMessage(rule string, records []*alert.Record) (string
 		e.team,
 		e.priority,
 		e.caseType,
+		e.message,
 	}
 
 	funcs := template.FuncMap{
@@ -194,7 +199,7 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-{{ range .Records }}<h4>Filter path: {{ .Filter }}</h4>{{ if .Fields }}
+{{ if .Message }}<p>{{ .Message }}</p>{{ end }}{{ range .Records }}<h4>Filter path: {{ .Filter }}</h4>{{ if .Fields }}
 <table>
   <tr>
     <th>Key</th>

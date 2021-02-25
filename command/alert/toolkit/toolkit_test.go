@@ -173,7 +173,7 @@ func TestBuildMessage(t *testing.T) {
 	}
 
 	expected := `Content-Type: text/html
-Subject: Smittestop Alert: Test Error
+Subject: Test Error
 @@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=Consulting@@ @@Priority=D - Low@@ @@CaseType=Event@@
 <!DOCTYPE html>
 <html>
@@ -196,7 +196,7 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-<h4>Filter path: aggregations.hostname.buckets</h4>
+<p>Example Message</p><h4>Filter path: aggregations.hostname.buckets</h4>
 <table>
   <tr>
     <th>Key</th>
@@ -248,6 +248,7 @@ tr:nth-child(even) {
 		team: "Consulting",
 		priority: "D - Low",
 		caseType: "Event",
+		message: "Example Message",
 	}
 	msg, err := eh.buildMessage("Test Error", records)
 	if err != nil {
@@ -310,7 +311,7 @@ func ExampleAlertMethod_buildMessageNoToolkitData() {
 
 	// Output:
 	// Content-Type: text/html
-	// Subject: Smittestop Alert: Test Rule
+	// Subject: Test Rule
 	//
 	// <!DOCTYPE html>
 	// <html>
