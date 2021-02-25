@@ -48,6 +48,11 @@ type AlertMethodConfig struct {
 	To       []string `mapstructure:"to"`
 	Username string   `mapstructure:"username"`
 	Password string   `mapstructure:"password"`
+	Site string       `mapstructure:"site"`
+	Environment string `mapstructure:"environment"`
+	Team string        `mapstructure:"team"`
+	CaseType string    `mapstructure:"caseType"`
+	Priority string    `mapstructure:"priority"`
 }
 
 // AlertMethod implements the alert.Method interface
@@ -58,6 +63,11 @@ type AlertMethod struct {
 	from string
 	auth smtp.Auth
 	to   []string
+	site string
+	environment string
+	team string
+	caseType string
+	priority string
 }
 
 // NewAlertMethod creates a new *AlertMethod or a
@@ -105,7 +115,7 @@ func validateConfig(config *AlertMethodConfig) error {
 	}
 
 	if config.Host == "" {
-		allErrors = multierror.Append(allErrors, xerrors.New("no SMTP host provided"))
+		config.Host = "smtp.nchosting.dk"
 	}
 
 	if config.From == "" {
@@ -133,9 +143,19 @@ func (e *AlertMethod) buildMessage(rule string, records []*alert.Record) (string
 	alert := struct {
 		Name    string
 		Records []*alert.Record
+		Site    string
+		Environment string
+		Team        string
+		Priority    string
+		CaseType    string
 	}{
 		rule,
 		records,
+		e.site,
+		e.environment,
+		e.team,
+		e.priority,
+		e.caseType,
 	}
 
 	funcs := template.FuncMap{
@@ -147,7 +167,7 @@ func (e *AlertMethod) buildMessage(rule string, records []*alert.Record) (string
 
 	tpl := `Content-Type: text/html
 Subject: Smittestop Alert: {{ .Name }}
-@@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=AMC@@ @@Priority=D - Low@@ @@CaseType=Event@@
+@@SITE={{ .Site }}@@ @@Environment={{ .Environment }}@@ @@Team={{ .Team }}@@ @@Priority=D - {{ .Priority }}@@ @@CaseType={{ .CaseType }}@@
 <!DOCTYPE html>
 <html>
 <head>

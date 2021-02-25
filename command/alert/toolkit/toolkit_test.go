@@ -39,6 +39,11 @@ func TestNewAlertMethod(t *testing.T) {
 				},
 				Username: "test@gmail.com",
 				Password: "password",
+				Site: "DIGSSAPP",
+				Environment: "PROD",
+				Team: "Consulting",
+				Priority: "Low",
+				CaseType: "Event",
 			},
 			false,
 		},
@@ -53,6 +58,11 @@ func TestNewAlertMethod(t *testing.T) {
 					"test_recipient_2@gmail.com",
 				},
 				Username: "test@gmail.com",
+				Site: "DIGSSAPP",
+				Environment: "PROD",
+				Team: "Consulting",
+				Priority: "Low",
+				CaseType: "Event",
 			},
 			false,
 		},
@@ -67,12 +77,23 @@ func TestNewAlertMethod(t *testing.T) {
 					"test_recipient_2@gmail.com",
 				},
 				Password: "test",
+				Site: "DIGSSAPP",
+				Environment: "PROD",
+				Team: "Consulting",
+				Priority: "Low",
+				CaseType: "Event",
 			},
 			false,
 		},
 		{
 			"missing-required-fields",
-			&AlertMethodConfig{},
+			&AlertMethodConfig{
+				Site: "DIGSSAPP",
+				Environment: "PROD",
+				Team: "Consulting",
+				Priority: "Low",
+				CaseType: "Event",
+			},
 			true,
 		},
 	}
@@ -153,7 +174,7 @@ func TestBuildMessage(t *testing.T) {
 
 	expected := `Content-Type: text/html
 Subject: Smittestop Alert: Test Error
-@@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=AMC@@ @@Priority=D - Low@@ @@CaseType=Event@@
+@@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=Consulting@@ @@Priority=D - Low@@ @@CaseType=Event@@
 <!DOCTYPE html>
 <html>
 <head>
@@ -221,7 +242,13 @@ tr:nth-child(even) {
 </body>
 </html>`
 
-	eh := &AlertMethod{}
+	eh := &AlertMethod{
+		site: "DIGSSAPP",
+		environment: "PROD",
+		team: "Consulting",
+		priority: "Low",
+		caseType: "Event",
+	}
 	msg, err := eh.buildMessage("Test Error", records)
 	if err != nil {
 		t.Fatal(err)
@@ -275,7 +302,13 @@ func ExampleAlertMethod_buildMessage() {
 		},
 	}
 
-	em := &AlertMethod{}
+	em := &AlertMethod{
+		site: "DIGSSAPP",
+		environment: "PROD",
+		team: "Consulting",
+		priority: "Low",
+		caseType: "Event",
+	}
 
 	msg, e := em.buildMessage("Test Rule", records)
 
@@ -285,7 +318,7 @@ func ExampleAlertMethod_buildMessage() {
 	// Output:
 	// Content-Type: text/html
 	// Subject: Smittestop Alert: Test Rule
-	// @@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=AMC@@ @@Priority=D - Low@@ @@CaseType=Event@@
+	// @@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=Consulting@@ @@Priority=D - Low@@ @@CaseType=Event@@
 	// <!DOCTYPE html>
 	// <html>
 	// <head>
