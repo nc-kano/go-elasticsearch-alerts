@@ -42,7 +42,7 @@ func TestNewAlertMethod(t *testing.T) {
 				Site: "DIGSSAPP",
 				Environment: "PROD",
 				Team: "Consulting",
-				Priority: "Low",
+				Priority: "D - Low",
 				CaseType: "Event",
 			},
 			false,
@@ -61,7 +61,7 @@ func TestNewAlertMethod(t *testing.T) {
 				Site: "DIGSSAPP",
 				Environment: "PROD",
 				Team: "Consulting",
-				Priority: "Low",
+				Priority: "D - Low",
 				CaseType: "Event",
 			},
 			false,
@@ -80,7 +80,7 @@ func TestNewAlertMethod(t *testing.T) {
 				Site: "DIGSSAPP",
 				Environment: "PROD",
 				Team: "Consulting",
-				Priority: "Low",
+				Priority: "D - Low",
 				CaseType: "Event",
 			},
 			false,
@@ -91,7 +91,7 @@ func TestNewAlertMethod(t *testing.T) {
 				Site: "DIGSSAPP",
 				Environment: "PROD",
 				Team: "Consulting",
-				Priority: "Low",
+				Priority: "D - Low",
 				CaseType: "Event",
 			},
 			true,
@@ -246,7 +246,7 @@ tr:nth-child(even) {
 		site: "DIGSSAPP",
 		environment: "PROD",
 		team: "Consulting",
-		priority: "Low",
+		priority: "D - Low",
 		caseType: "Event",
 	}
 	msg, err := eh.buildMessage("Test Error", records)
@@ -258,7 +258,7 @@ tr:nth-child(even) {
 	}
 }
 
-func ExampleAlertMethod_buildMessage() {
+func ExampleAlertMethod_buildMessageNoToolkitData() {
 	records := []*alert.Record{
 		{
 			Filter: "aggregations.hostname.buckets",
@@ -302,23 +302,16 @@ func ExampleAlertMethod_buildMessage() {
 		},
 	}
 
-	em := &AlertMethod{
-		site: "DIGSSAPP",
-		environment: "PROD",
-		team: "Consulting",
-		priority: "Low",
-		caseType: "Event",
-	}
+	em := &AlertMethod{}
 
-	msg, e := em.buildMessage("Test Rule", records)
+	msg, _ := em.buildMessage("Test Rule", records)
 
-	print(e)
 	fmt.Println(msg)
 
 	// Output:
 	// Content-Type: text/html
 	// Subject: Smittestop Alert: Test Rule
-	// @@SITE=DIGSSAPP@@ @@Environment=PROD@@ @@Team=Consulting@@ @@Priority=D - Low@@ @@CaseType=Event@@
+	//
 	// <!DOCTYPE html>
 	// <html>
 	// <head>
