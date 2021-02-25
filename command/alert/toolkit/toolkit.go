@@ -100,6 +100,11 @@ func NewAlertMethod(config *AlertMethodConfig) (alert.Method, error) {
 		from: config.From,
 		to:   config.To,
 		auth: auth,
+		site: config.Site,
+		environment: config.Environment,
+		team: config.Team,
+		caseType: config.CaseType,
+		priority: config.Priority,
 	}, nil
 }
 
