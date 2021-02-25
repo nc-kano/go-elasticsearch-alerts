@@ -19,6 +19,7 @@ import (
 	hclog "github.com/hashicorp/go-hclog"
 	"github.com/mitchellh/mapstructure"
 	"github.com/morningconsult/go-elasticsearch-alerts/command/alert"
+	"github.com/morningconsult/go-elasticsearch-alerts/command/alert/toolkit"
 	"github.com/morningconsult/go-elasticsearch-alerts/command/alert/email"
 	"github.com/morningconsult/go-elasticsearch-alerts/command/alert/file"
 	"github.com/morningconsult/go-elasticsearch-alerts/command/alert/slack"
@@ -101,6 +102,12 @@ func buildMethod(output config.OutputConfig) (alert.Method, error) { // nolint: 
 			return nil, xerrors.Errorf("error decoding email output configuration: %v", err)
 		}
 		method, err = email.NewAlertMethod(emailConfig)
+	case "toolkit":
+		toolkitConfig := new(toolkit.AlertMethodConfig)
+		if err = mapstructure.Decode(output.Config, toolkitConfig); err != nil {
+			return nil, xerrors.Errorf("error decoding toolkit output configuration: %v", err)
+		}
+		method, err = toolkit.NewAlertMethod(toolkitConfig)
 	case "sns":
 		snsConfig := new(sns.AlertMethodConfig)
 		if err = mapstructure.Decode(output.Config, snsConfig); err != nil {
