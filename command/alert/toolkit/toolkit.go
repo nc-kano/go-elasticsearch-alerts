@@ -171,7 +171,7 @@ func (e *AlertMethod) buildMessage(rule string, records []*alert.Record) (string
 	}
 
 	tpl := `Content-Type: text/html
-Subject: Smittestop Alert: {{ .Name }}
+Subject: {{ .Name }}
 {{ if .Site }}@@SITE={{ .Site }}@@{{ end }}{{ if .Environment }} @@Environment={{ .Environment }}@@{{ end }}{{ if .Team }} @@Team={{ .Team }}@@{{ end }}{{ if .Priority }} @@Priority={{ .Priority }}@@{{ end }}{{ if .CaseType }} @@CaseType={{ .CaseType }}@@{{ end }}
 <!DOCTYPE html>
 <html>
